@@ -34,8 +34,9 @@ export const QuoteCard = forwardRef<HTMLDivElement, Props>(function QuoteCard(
       />
       <div
         style={{
-          position: 'absolute',
-          inset: 0,
+          position: 'relative',
+          flex: '1 1 auto',
+          minHeight: 0,
           padding: size === 'landscape' ? '100px 140px' : '120px 100px',
           display: 'flex',
           flexDirection: 'column',

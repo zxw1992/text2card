@@ -31,6 +31,9 @@ export const CardFrame = forwardRef<HTMLDivElement, Props>(function CardFrame(
         borderRadius: radius,
         position: 'relative',
         overflow: 'hidden',
+        // 内容层走正常文档流（flex 子项），auto 模式下卡片才能随内容长高
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       {children}

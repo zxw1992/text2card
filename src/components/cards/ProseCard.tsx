@@ -26,8 +26,9 @@ export const ProseCard = forwardRef<HTMLDivElement, Props>(function ProseCard(
       <div className="noise-overlay" style={{ opacity: 0.05 }} />
       <div
         style={{
-          position: 'absolute',
-          inset: 0,
+          position: 'relative',
+          flex: '1 1 auto',
+          minHeight: 0,
           padding: `${padY}px ${padX}px`,
           display: 'flex',
           flexDirection: 'column',

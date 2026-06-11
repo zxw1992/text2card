@@ -49,8 +49,9 @@ export const PoetryCard = forwardRef<HTMLDivElement, Props>(function PoetryCard(
 
       <div
         style={{
-          position: 'absolute',
-          inset: 0,
+          position: 'relative',
+          flex: '1 1 auto',
+          minHeight: 0,
           padding: padOuter,
           display: 'flex',
           flexDirection: 'column',

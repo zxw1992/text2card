@@ -49,8 +49,9 @@ export const CodeCard = forwardRef<HTMLDivElement, Props>(function CodeCard(
       <div className="noise-overlay" style={{ opacity: 0.08 }} />
       <div
         style={{
-          position: 'absolute',
-          inset: 0,
+          position: 'relative',
+          flex: '1 1 auto',
+          minHeight: 0,
           padding: padOuter,
           display: 'flex',
           flexDirection: 'column',
