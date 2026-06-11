@@ -55,7 +55,7 @@ export const ProseCard = forwardRef<HTMLDivElement, Props>(function ProseCard(
             {title && (
               <h1
                 style={{
-                  fontFamily: '"Fraunces", "Noto Serif SC", serif',
+                  fontFamily: '"Fraunces Variable", "Noto Serif SC Variable", serif',
                   fontSize: 64,
                   lineHeight: 1.15,
                   fontWeight: 600,
@@ -79,7 +79,7 @@ export const ProseCard = forwardRef<HTMLDivElement, Props>(function ProseCard(
         <article
           style={{
             flex: 1,
-            fontFamily: '"Fraunces", "Noto Serif SC", serif',
+            fontFamily: '"Fraunces Variable", "Noto Serif SC Variable", serif',
             fontSize: 24,
             lineHeight: 1.75,
             color: theme.text,
@@ -121,7 +121,7 @@ function mdComponents(theme: ProseTheme): Components {
     h1: ({ children }) => (
       <h2
         style={{
-          fontFamily: '"Fraunces", "Noto Serif SC", serif',
+          fontFamily: '"Fraunces Variable", "Noto Serif SC Variable", serif',
           fontSize: 44,
           lineHeight: 1.2,
           fontWeight: 600,
@@ -135,7 +135,7 @@ function mdComponents(theme: ProseTheme): Components {
     h2: ({ children }) => (
       <h3
         style={{
-          fontFamily: '"Fraunces", "Noto Serif SC", serif',
+          fontFamily: '"Fraunces Variable", "Noto Serif SC Variable", serif',
           fontSize: 34,
           lineHeight: 1.25,
           fontWeight: 600,
@@ -150,7 +150,7 @@ function mdComponents(theme: ProseTheme): Components {
     h3: ({ children }) => (
       <h4
         style={{
-          fontFamily: '"Fraunces", "Noto Serif SC", serif',
+          fontFamily: '"Fraunces Variable", "Noto Serif SC Variable", serif',
           fontSize: 26,
           lineHeight: 1.3,
           fontWeight: 600,

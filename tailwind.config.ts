@@ -5,11 +5,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['Fraunces', 'EB Garamond', 'Noto Serif SC', 'serif'],
+        serif: ['"Fraunces Variable"', '"Noto Serif SC Variable"', 'serif'],
         sans: ['Inter', 'system-ui', 'Noto Sans SC', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
-        song: ['"Noto Serif SC"', 'serif'],
-        kai: ['"Ma Shan Zheng"', '"Noto Serif SC"', 'serif'],
+        song: ['"Noto Serif SC Variable"', 'serif'],
+        kai: ['"Ma Shan Zheng"', '"Noto Serif SC Variable"', 'serif'],
       },
       colors: {
         ink: {

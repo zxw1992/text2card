@@ -86,7 +86,8 @@ npm run preview
 - Vite + React 18 + TypeScript
 - Tailwind CSS v3（设计 token 在 `tailwind.config.ts`）
 - [Shiki](https://shiki.style/) — 代码高亮（直接用 VS Code TextMate 主题）
-- [html-to-image](https://github.com/bubkoo/html-to-image) — DOM → PNG
+- [html-to-image](https://github.com/bubkoo/html-to-image) — DOM → SVG（PNG 栅格化为自研管线，保证字体就绪）
+- [@fontsource](https://fontsource.org/) — 字体 self-host
 - [react-markdown](https://github.com/remarkjs/react-markdown) + remark-gfm — Markdown 渲染
 - highlight.js — 代码语言自动识别
 
@@ -135,17 +136,22 @@ src/
 
 ## 字体
 
-通过 Google Fonts CDN 加载：
+通过 [@fontsource](https://fontsource.org/) 本地打包（self-host），无任何外部请求，
+国内网络可用、可离线运行：
 
-- **Fraunces** — 英文衬线（金句 / 长文标题）
+- **Fraunces Variable** — 英文衬线（金句 / 长文标题，含光学尺寸轴）
 - **Inter** — 英文 sans（UI / 署名）
 - **JetBrains Mono** — 等宽（代码）
-- **Noto Serif SC** — 思源宋体（中文金句 / 诗词 / 长文正文）
+- **Noto Serif SC Variable** — 思源宋体（中文金句 / 诗词 / 长文正文）
 - **Ma Shan Zheng** — 楷书（诗词标题 / 印章）
+
+CJK 字体按 unicode-range 分成上百个小片，浏览器只下载页面实际用到的片。
+导出时会把已加载的字体分片内联进图片，**导出结果与屏幕渲染完全一致**。
 
 ## 已知限制
 
-- **字体内联**：由于浏览器的同源策略，html-to-image 无法把 Google Fonts 的 CSS 内联到 SVG。导出图会用浏览器已加载的 web font 渲染（实测中文宋体、JetBrains Mono 都能正常显示，英文 Inter 在 SVG 序列化时偶尔回退到系统 sans）。如需 100% 字体保真，可把字体改成 self-host woff2 并写入 `@font-face` data URI。
+- **导出耗时约 1.5–2 秒**：导出管线会等待 SVG 内嵌字体就绪并校验渲染稳定，
+  这是字体保真的代价。
 - **自适应尺寸** 的 min-height 是 900px，短内容底部会有留白（设计上有意，避免极扁卡片）。
 
 ## License

@@ -9,6 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource-variable/fraunces": "^5.2.9",
+    "@fontsource-variable/noto-serif-sc": "^5.2.10",
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/ma-shan-zheng": "^5.2.9",
     "highlight.js": "^11.10.0",
     "html-to-image": "^1.11.13",
     "lucide-react": "^0.460.0",

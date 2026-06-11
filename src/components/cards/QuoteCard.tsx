@@ -58,7 +58,7 @@ export const QuoteCard = forwardRef<HTMLDivElement, Props>(function QuoteCard(
 
         <p
           style={{
-            fontFamily: '"Fraunces", "Noto Serif SC", serif',
+            fontFamily: '"Fraunces Variable", "Noto Serif SC Variable", serif',
             fontSize,
             lineHeight: 1.45,
             fontWeight: 500,
@@ -90,7 +90,7 @@ export const QuoteCard = forwardRef<HTMLDivElement, Props>(function QuoteCard(
           />
           <span
             style={{
-              fontFamily: '"Inter", "Noto Serif SC", sans-serif',
+              fontFamily: '"Inter", "Noto Serif SC Variable", sans-serif',
               fontSize: 22,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',

@@ -112,7 +112,7 @@ function VerticalLayout({
           style={{
             writingMode: 'vertical-rl',
             textOrientation: 'upright',
-            fontFamily: '"Ma Shan Zheng", "Noto Serif SC", serif',
+            fontFamily: '"Ma Shan Zheng", "Noto Serif SC Variable", serif',
             fontSize: 64,
             letterSpacing: '0.4em',
             color: theme.accent,
@@ -129,7 +129,7 @@ function VerticalLayout({
           style={{
             writingMode: 'vertical-rl',
             textOrientation: 'upright',
-            fontFamily: '"Noto Serif SC", serif',
+            fontFamily: '"Noto Serif SC Variable", serif',
             fontSize: verseSize,
             letterSpacing: '0.32em',
             lineHeight: 1.2,
@@ -145,7 +145,7 @@ function VerticalLayout({
           style={{
             writingMode: 'vertical-rl',
             textOrientation: 'upright',
-            fontFamily: '"Noto Serif SC", serif',
+            fontFamily: '"Noto Serif SC Variable", serif',
             fontSize: 22,
             letterSpacing: '0.3em',
             color: theme.accent,
@@ -200,7 +200,7 @@ function HorizontalLayout({
         <div
           key={idx}
           style={{
-            fontFamily: '"Noto Serif SC", serif',
+            fontFamily: '"Noto Serif SC Variable", serif',
             fontSize: isLong ? 36 : 48,
             letterSpacing: '0.3em',
             lineHeight: 1.8,
@@ -213,7 +213,7 @@ function HorizontalLayout({
         <div
           style={{
             marginTop: 40,
-            fontFamily: '"Noto Serif SC", serif',
+            fontFamily: '"Noto Serif SC Variable", serif',
             fontSize: 22,
             color: theme.accent,
             letterSpacing: '0.2em',
@@ -251,7 +251,7 @@ function Seal({ color }: { color: string }) {
         textAnchor="middle"
         dominantBaseline="middle"
         fill={color}
-        fontFamily='"Ma Shan Zheng", "Noto Serif SC", serif'
+        fontFamily='"Ma Shan Zheng", "Noto Serif SC Variable", serif'
         fontSize="52"
         letterSpacing="0"
       >
