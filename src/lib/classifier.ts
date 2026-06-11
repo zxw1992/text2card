@@ -33,14 +33,14 @@ export function classify(input: string): Style {
   if (codeLineCount >= 2 && lines.length <= 6) return 'code'
 
   // 2) classical poetry: short symmetric Chinese lines
-  const chineseLines = lines.filter((l) => l.trim().length > 0)
-  if (chineseLines.length >= 2 && chineseLines.length <= 12) {
-    const matched = chineseLines.filter((l) => POETRY_LINE.test(l)).length
-    if (matched >= Math.max(2, Math.floor(chineseLines.length * 0.6))) {
+  const nonEmptyLines = lines.filter((l) => l.trim().length > 0)
+  if (nonEmptyLines.length >= 2 && nonEmptyLines.length <= 12) {
+    const matched = nonEmptyLines.filter((l) => POETRY_LINE.test(l)).length
+    if (matched >= Math.max(2, Math.floor(nonEmptyLines.length * 0.6))) {
       return 'poetry'
     }
   }
-  if (POETRY_TITLE.test(text) && chineseLines.length <= 14) return 'poetry'
+  if (POETRY_TITLE.test(text) && nonEmptyLines.length <= 14) return 'poetry'
 
   // 3) markdown structure or long prose
   if (MD_RE.test(text)) return 'prose'

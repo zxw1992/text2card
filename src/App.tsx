@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Download, Sparkles } from 'lucide-react'
 import { Editor } from './components/Editor'
 import { Preview } from './components/Preview'
@@ -47,9 +47,13 @@ export default function App() {
 
   const cardRef = useRef<HTMLDivElement>(null)
 
+  // 生效风格变化（含 auto 检测切换）时重置主题索引，避免停留在上个风格的主题位
+  useEffect(() => {
+    setThemeIndex(0)
+  }, [effective])
+
   function handleStyleChange(next: Style | 'auto') {
     setStyleChoice(next)
-    setThemeIndex(0)
   }
 
   async function handleExport() {

@@ -10,13 +10,15 @@ interface Props {
 }
 
 function pickFontSize(textLen: number, size: SizeMode): number {
-  // tuned for width 1080
-  const base = size === 'landscape' ? 56 : 64
-  if (textLen <= 30) return base + 16
-  if (textLen <= 80) return base
-  if (textLen <= 160) return base - 12
-  if (textLen <= 280) return base - 22
-  return base - 28
+  // 档位按宽 1080 调参；16:9 画布宽 1920，字号等比放大（系数略收，避免过满）
+  const base = 64
+  let px: number
+  if (textLen <= 30) px = base + 16
+  else if (textLen <= 80) px = base
+  else if (textLen <= 160) px = base - 12
+  else if (textLen <= 280) px = base - 22
+  else px = base - 28
+  return size === 'landscape' ? Math.round(px * 1.4) : px
 }
 
 export const QuoteCard = forwardRef<HTMLDivElement, Props>(function QuoteCard(
