@@ -17,6 +17,31 @@ import { poetryThemes } from './themes/poetryThemes'
 
 const DEFAULT_TEXT = '愿你慢慢长大，愿你有好运气，如果没有，愿你在不幸中学会慈悲。'
 
+// 自动保存：编辑状态持久化到 localStorage，刷新/标签页被浏览器回收后不丢内容
+const STORAGE_KEY = 'text2card.state.v1'
+
+interface PersistedState {
+  text: string
+  styleChoice: Style | 'auto'
+  size: SizeMode
+  themeIndex: number
+  title: string
+  author: string
+  eyebrow: string
+  vertical: boolean
+}
+
+function loadPersisted(): Partial<PersistedState> {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return {}
+    const data = JSON.parse(raw) as Partial<PersistedState>
+    return typeof data === 'object' && data !== null ? data : {}
+  } catch {
+    return {}
+  }
+}
+
 const STYLE_OPTIONS: { value: Style | 'auto'; label: string }[] = [
   { value: 'auto', label: '自动' },
   { value: 'code', label: '代码' },
@@ -32,14 +57,21 @@ const SIZE_OPTIONS: { value: SizeMode; label: string }[] = [
 ]
 
 export default function App() {
-  const [text, setText] = useState(DEFAULT_TEXT)
-  const [styleChoice, setStyleChoice] = useState<Style | 'auto'>('auto')
-  const [size, setSize] = useState<SizeMode>('auto')
-  const [themeIndex, setThemeIndex] = useState(0)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [eyebrow, setEyebrow] = useState('')
-  const [vertical, setVertical] = useState(true)
+  const [persisted] = useState(loadPersisted)
+  const [text, setText] = useState(persisted.text ?? DEFAULT_TEXT)
+  const [styleChoice, setStyleChoice] = useState<Style | 'auto'>(
+    STYLE_OPTIONS.some((o) => o.value === persisted.styleChoice) ? persisted.styleChoice! : 'auto',
+  )
+  const [size, setSize] = useState<SizeMode>(
+    SIZE_OPTIONS.some((o) => o.value === persisted.size) ? persisted.size! : 'auto',
+  )
+  const [themeIndex, setThemeIndex] = useState(
+    typeof persisted.themeIndex === 'number' && persisted.themeIndex >= 0 ? persisted.themeIndex : 0,
+  )
+  const [title, setTitle] = useState(persisted.title ?? '')
+  const [author, setAuthor] = useState(persisted.author ?? '')
+  const [eyebrow, setEyebrow] = useState(persisted.eyebrow ?? '')
+  const [vertical, setVertical] = useState(persisted.vertical ?? true)
   const [exporting, setExporting] = useState(false)
 
   const detected = useMemo(() => classify(text), [text])
@@ -47,10 +79,29 @@ export default function App() {
 
   const cardRef = useRef<HTMLDivElement>(null)
 
-  // 生效风格变化（含 auto 检测切换）时重置主题索引，避免停留在上个风格的主题位
+  // 生效风格变化（含 auto 检测切换）时重置主题索引，避免停留在上个风格的主题位。
+  // 用前值比较而不是「跳过首次」：StrictMode 下挂载效果会执行两次，
+  // 布尔守卫第二次就会误触发，把刚从 localStorage 恢复的主题索引清零。
+  const prevEffective = useRef(effective)
   useEffect(() => {
-    setThemeIndex(0)
+    if (prevEffective.current !== effective) {
+      prevEffective.current = effective
+      setThemeIndex(0)
+    }
   }, [effective])
+
+  // 编辑状态自动保存（轻微防抖，避免每个按键都写 localStorage）
+  useEffect(() => {
+    const id = setTimeout(() => {
+      try {
+        const state: PersistedState = { text, styleChoice, size, themeIndex, title, author, eyebrow, vertical }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+      } catch {
+        // localStorage 不可用（隐私模式/配额满）时静默放弃自动保存
+      }
+    }, 300)
+    return () => clearTimeout(id)
+  }, [text, styleChoice, size, themeIndex, title, author, eyebrow, vertical])
 
   function handleStyleChange(next: Style | 'auto') {
     setStyleChoice(next)
