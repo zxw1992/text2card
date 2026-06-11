@@ -22,12 +22,16 @@
 
 ## 运行
 
+要求 Node.js ≥ 18（Vite 5 的最低要求），macOS / Windows / Linux 均可。
+
 ```bash
 npm install
 npm run dev
 ```
 
-浏览器打开 <http://localhost:5173/>。
+浏览器打开 <http://localhost:5173/>。导出 PNG 建议使用 Chrome / Edge 等
+Chromium 系浏览器——html-to-image 的 DOM→SVG→canvas 渲染路径在 Safari
+上有已知 bug（字体丢失、图像空白）。
 
 构建生产版本：
 
