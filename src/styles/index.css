@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --canvas-bg: #ebe9e4;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, 'Noto Sans SC', sans-serif;
+  background: var(--canvas-bg);
+  color: #1f1c18;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Reusable noise overlay using inline SVG */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Hide scrollbar in preview pane but keep scrolling */
+.preview-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #c8c5be transparent;
+}
+.preview-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.preview-scroll::-webkit-scrollbar-thumb {
+  background: #c8c5be;
+  border-radius: 4px;
+}
+
+/* shiki output reset */
+.shiki,
+.shiki code {
+  background: transparent !important;
+  font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+}
+.shiki {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

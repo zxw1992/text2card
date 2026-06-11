@@ -1,0 +1,15 @@
+# dependencies / build
+node_modules/
+dist/
+*.tsbuildinfo
+
+# local artifacts
+outputs/
+dev_log_personal/
+
+# os / editor
+.DS_Store
+*.local
+
+# logs
+npm-debug.log*
