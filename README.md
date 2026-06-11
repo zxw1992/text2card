@@ -4,6 +4,14 @@
 
 本地运行，零后端，无需登录。审美是第一优先级。
 
+![text2card 界面](assets/screenshot-app.png)
+
+| 代码 | 长文 Markdown |
+|---|---|
+| ![代码卡片](assets/sample-code.png) | ![长文卡片](assets/sample-prose.png) |
+
+![诗词卡片（16:9 竖排）](assets/sample-poetry.png)
+
 ---
 
 ## 特性
