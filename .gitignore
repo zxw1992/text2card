@@ -6,6 +6,7 @@ dist/
 # local artifacts
 outputs/
 dev_log_personal/
+CODE_REVIEW.md
 
 # os / editor
 .DS_Store

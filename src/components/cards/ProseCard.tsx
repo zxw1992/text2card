@@ -3,7 +3,7 @@ import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { CardFrame, type SizeMode } from '../CardFrame'
 import type { ProseTheme } from '../../themes/proseThemes'
-import { getHighlighter, safeLang } from '../../lib/shiki'
+import { getHighlighter, resolveLang } from '../../lib/shiki'
 
 interface Props {
   text: string
@@ -206,10 +206,12 @@ function mdComponents(theme: ProseTheme): Components {
         }}
       />
     ),
-    code: ({ inline, className, children, ...props }: any) => {
+    code: ({ className, children, ...props }: any) => {
       const language = /language-(\w+)/.exec(className || '')?.[1]
       const raw = String(children).replace(/\n$/, '')
-      if (inline || !language) {
+      // react-markdown v9 不再传 inline；块级代码的文本固定以 \n 结尾，行内代码不含 \n
+      const isBlock = !!language || String(children).includes('\n')
+      if (!isBlock) {
         return (
           <code
             style={{
@@ -225,7 +227,9 @@ function mdComponents(theme: ProseTheme): Components {
           </code>
         )
       }
-      return <ProseCodeBlock code={raw} lang={safeLang(language)} theme={theme} />
+      return (
+        <ProseCodeBlock code={raw} lang={resolveLang(language) ?? 'text'} theme={theme} />
+      )
     },
     pre: ({ children }) => <>{children}</>,
   }

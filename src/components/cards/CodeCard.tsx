@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useState } from 'react'
 import { CardFrame, type SizeMode } from '../CardFrame'
 import type { CodeTheme } from '../../themes/codeThemes'
-import { getHighlighter, safeLang } from '../../lib/shiki'
+import { getHighlighter, resolveLang } from '../../lib/shiki'
 import { detectLang, extractCodeFromFence } from '../../lib/detectLang'
 
 interface Props {
@@ -16,7 +16,7 @@ export const CodeCard = forwardRef<HTMLDivElement, Props>(function CodeCard(
   ref,
 ) {
   const { code, lang: fenceLang } = extractCodeFromFence(text)
-  const lang = safeLang(fenceLang ?? detectLang(code))
+  const lang = resolveLang(fenceLang) ?? detectLang(code)
   const [html, setHtml] = useState<string>('')
 
   useEffect(() => {

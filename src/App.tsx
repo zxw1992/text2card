@@ -58,6 +58,9 @@ export default function App() {
       setExporting(true)
       const name = `text2card-${effective}-${Date.now()}.png`
       await exportPng(cardRef.current, name)
+    } catch (err) {
+      console.error('export failed:', err)
+      alert(`导出失败：${err instanceof Error ? err.message : String(err)}\n可尝试刷新页面后重试。`)
     } finally {
       setExporting(false)
     }
