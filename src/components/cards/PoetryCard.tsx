@@ -99,7 +99,11 @@ function VerticalLayout({
   return (
     <div
       style={{
-        flex: 1,
+        // basis 用 auto（auto 模式下卡片随内容长高），minHeight: 0 让固定
+        // 尺寸下容器能被压回可用高度，竖排文字按真实可用高度换行，
+        // 否则按 min-content 撑开、文字越过卡片下边缘（假性溢出提示）
+        flex: '1 1 auto',
+        minHeight: 0,
         display: 'flex',
         flexDirection: 'row-reverse',
         alignItems: 'flex-start',
@@ -175,7 +179,9 @@ function HorizontalLayout({
   return (
     <div
       style={{
-        flex: 1,
+        // 同竖排：固定尺寸下允许收缩，超出时居中对称裁切而不是单边下坠
+        flex: '1 1 auto',
+        minHeight: 0,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
