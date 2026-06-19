@@ -26,6 +26,14 @@ const SAMPLES: { label: string; text: string }[] = [
 ]
 
 export function Editor({ value, onChange, className = '' }: Props) {
+  // 仅当用户输入了自己的内容（非空且不等于任一示例/默认文本）时才二次确认，
+  // 避免手滑点示例覆盖掉正在编辑的文字
+  function applySample(sampleText: string) {
+    const dirty = value.trim() !== '' && !SAMPLES.some((s) => s.text === value)
+    if (dirty && !window.confirm('用示例替换当前内容？正在编辑的文字会被覆盖。')) return
+    onChange(sampleText)
+  }
+
   return (
     <aside className={`h-full w-full shrink-0 flex-col border-r border-ink-200/60 bg-white/60 backdrop-blur md:w-[360px] ${className}`}>
       <div className="flex items-center justify-between border-b border-ink-200/60 px-5 py-4">
@@ -34,7 +42,7 @@ export function Editor({ value, onChange, className = '' }: Props) {
           {SAMPLES.map((s) => (
             <button
               key={s.label}
-              onClick={() => onChange(s.text)}
+              onClick={() => applySample(s.text)}
               className="rounded-full border border-ink-200 px-2.5 py-1 text-xs text-ink-600 transition hover:border-ink-400 hover:text-ink-800"
             >
               {s.label}
