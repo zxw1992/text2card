@@ -1,10 +1,14 @@
-import { type ChangeEvent } from 'react'
+import { useState, type ChangeEvent } from 'react'
+import { Sparkles, X } from 'lucide-react'
 
 interface Props {
   value: string
   onChange: (v: string) => void
   className?: string
 }
+
+// 首次引导提示是否已被关闭（localStorage 记住，永久不再弹）
+const HINT_KEY = 'text2card.hint.dismissed.v1'
 
 const SAMPLES: { label: string; text: string }[] = [
   {
@@ -26,6 +30,22 @@ const SAMPLES: { label: string; text: string }[] = [
 ]
 
 export function Editor({ value, onChange, className = '' }: Props) {
+  const [showHint, setShowHint] = useState(() => {
+    try {
+      return localStorage.getItem(HINT_KEY) !== '1'
+    } catch {
+      return false
+    }
+  })
+  function dismissHint() {
+    setShowHint(false)
+    try {
+      localStorage.setItem(HINT_KEY, '1')
+    } catch {
+      // localStorage 不可用时忽略，本次会话内已关闭
+    }
+  }
+
   // 仅当用户输入了自己的内容（非空且不等于任一示例/默认文本）时才二次确认，
   // 避免手滑点示例覆盖掉正在编辑的文字
   function applySample(sampleText: string) {
@@ -50,6 +70,21 @@ export function Editor({ value, onChange, className = '' }: Props) {
           ))}
         </div>
       </div>
+      {showHint && (
+        <div className="flex items-start gap-2 border-b border-amber-200/70 bg-amber-50/80 px-5 py-2.5 text-xs leading-relaxed text-ink-600">
+          <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
+          <span className="flex-1">
+            粘贴或输入任意文本，自动识别风格并生成卡片；上方按钮可载入示例。
+          </span>
+          <button
+            onClick={dismissHint}
+            title="不再提示"
+            className="shrink-0 rounded p-0.5 text-ink-400 transition hover:text-ink-700"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
       <textarea
         value={value}
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => onChange(e.target.value)}
