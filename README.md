@@ -4,6 +4,8 @@
 
 本地运行，零后端，无需登录。审美是第一优先级。
 
+**在线体验** → <https://text2card-q3j.pages.dev/>
+
 ![text2card 界面](assets/screenshot-app.png)
 
 | 代码 | 长文 Markdown |
