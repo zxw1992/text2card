@@ -5,6 +5,7 @@ import { SIZE_DIMENSIONS, type SizeMode } from './CardFrame'
 interface Props {
   size: SizeMode
   children: ReactNode
+  className?: string
 }
 
 /** 卡片内是否有元素被 overflow:hidden 截断（固定尺寸下内容放不下） */
@@ -14,7 +15,7 @@ function hasClippedContent(root: HTMLElement | null): boolean {
   return nodes.some((el) => el.scrollHeight > el.clientHeight + 2)
 }
 
-export function Preview({ size, children }: Props) {
+export function Preview({ size, children, className = '' }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(0.5)
@@ -26,8 +27,12 @@ export function Preview({ size, children }: Props) {
       const wrap = wrapRef.current
       if (!wrap) return
       const dim = SIZE_DIMENSIONS[size]
-      const availW = wrap.clientWidth - 96
-      const availH = wrap.clientHeight - 96
+      // 实测内边距，移动端 p-4 / 桌面 p-12 两套都准（曾写死 96 = p-12 两侧）
+      const cs = getComputedStyle(wrap)
+      const padX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
+      const padY = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
+      const availW = wrap.clientWidth - padX
+      const availH = wrap.clientHeight - padY
       const measuredH = innerRef.current?.offsetHeight ?? dim.height ?? dim.minHeight ?? 900
       const s = Math.min(availW / dim.width, availH / measuredH, 1)
       setScale(s)
@@ -65,7 +70,7 @@ export function Preview({ size, children }: Props) {
   return (
     <div
       ref={wrapRef}
-      className="preview-scroll relative flex h-full flex-1 items-center justify-center overflow-auto p-12"
+      className={`preview-scroll relative h-full flex-1 items-center justify-center overflow-auto p-4 md:p-12 ${className}`}
       style={{ background: 'var(--canvas-bg)' }}
     >
       {clipped && (

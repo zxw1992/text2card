@@ -3,6 +3,7 @@ import { type ChangeEvent } from 'react'
 interface Props {
   value: string
   onChange: (v: string) => void
+  className?: string
 }
 
 const SAMPLES: { label: string; text: string }[] = [
@@ -24,9 +25,9 @@ const SAMPLES: { label: string; text: string }[] = [
   },
 ]
 
-export function Editor({ value, onChange }: Props) {
+export function Editor({ value, onChange, className = '' }: Props) {
   return (
-    <aside className="flex h-full w-[360px] shrink-0 flex-col border-r border-ink-200/60 bg-white/60 backdrop-blur">
+    <aside className={`h-full w-full shrink-0 flex-col border-r border-ink-200/60 bg-white/60 backdrop-blur md:w-[360px] ${className}`}>
       <div className="flex items-center justify-between border-b border-ink-200/60 px-5 py-4">
         <h2 className="font-serif text-lg font-semibold text-ink-800">编辑</h2>
         <div className="flex gap-1.5">

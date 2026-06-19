@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Download, Github, Sparkles } from 'lucide-react'
+import { Download, Eye, Github, Pencil, SlidersHorizontal, Sparkles } from 'lucide-react'
 import { Editor } from './components/Editor'
 import { Preview } from './components/Preview'
 import { Controls } from './components/Controls'
@@ -73,6 +73,7 @@ export default function App() {
   const [eyebrow, setEyebrow] = useState(persisted.eyebrow ?? '')
   const [vertical, setVertical] = useState(persisted.vertical ?? true)
   const [exporting, setExporting] = useState(false)
+  const [mobileTab, setMobileTab] = useState<'edit' | 'preview' | 'style'>('edit')
 
   const detected = useMemo(() => classify(text), [text])
   const effective: Style = styleChoice === 'auto' ? detected : styleChoice
@@ -133,53 +134,64 @@ export default function App() {
     cardRef,
   })
 
+  const stylePill = (
+    <div className="flex items-center gap-1 rounded-full border border-ink-200 bg-white p-1 text-sm">
+      {STYLE_OPTIONS.map((opt) => {
+        const isActive = styleChoice === opt.value
+        const isAutoSuggesting = opt.value === 'auto' && styleChoice === 'auto'
+        return (
+          <button
+            key={opt.value}
+            onClick={() => handleStyleChange(opt.value)}
+            className={`relative whitespace-nowrap rounded-full px-3 py-1.5 transition ${
+              isActive ? 'bg-ink-800 text-white' : 'text-ink-600 hover:text-ink-800'
+            }`}
+          >
+            {opt.label}
+            {isAutoSuggesting && (
+              <span className="ml-1 text-xs opacity-75">· {labelOf(detected)}</span>
+            )}
+          </button>
+        )
+      })}
+    </div>
+  )
+
+  const sizePill = (
+    <div className="flex items-center gap-1 rounded-full border border-ink-200 bg-white p-1 text-sm">
+      {SIZE_OPTIONS.map((opt) => (
+        <button
+          key={opt.value}
+          onClick={() => setSize(opt.value)}
+          className={`whitespace-nowrap rounded-full px-3 py-1.5 transition ${
+            size === opt.value ? 'bg-ink-800 text-white' : 'text-ink-600 hover:text-ink-800'
+          }`}
+        >
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  )
+
+  const MOBILE_TABS = [
+    { value: 'edit', label: '编辑', icon: Pencil },
+    { value: 'preview', label: '预览', icon: Eye },
+    { value: 'style', label: '调整', icon: SlidersHorizontal },
+  ] as const
+
   return (
     <div className="flex h-screen flex-col bg-[var(--canvas-bg)]">
-      <header className="flex items-center justify-between border-b border-ink-200/60 bg-white/70 px-6 py-3 backdrop-blur">
+      <header className="flex items-center justify-between gap-3 border-b border-ink-200/60 bg-white/70 px-4 py-3 backdrop-blur md:px-6">
         <div className="flex items-center gap-3">
           <Sparkles className="h-5 w-5 text-ink-700" />
           <span className="font-serif text-xl font-semibold text-ink-800">text2card</span>
-          <span className="text-xs text-ink-400">文案卡片美化</span>
+          <span className="hidden text-xs text-ink-400 md:inline">文案卡片美化</span>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1 rounded-full border border-ink-200 bg-white p-1 text-sm">
-            {STYLE_OPTIONS.map((opt) => {
-              const isActive = styleChoice === opt.value
-              const isAutoSuggesting = opt.value === 'auto' && styleChoice === 'auto'
-              return (
-                <button
-                  key={opt.value}
-                  onClick={() => handleStyleChange(opt.value)}
-                  className={`relative rounded-full px-3 py-1.5 transition ${
-                    isActive
-                      ? 'bg-ink-800 text-white'
-                      : 'text-ink-600 hover:text-ink-800'
-                  }`}
-                >
-                  {opt.label}
-                  {isAutoSuggesting && (
-                    <span className="ml-1 text-xs opacity-75">· {labelOf(detected)}</span>
-                  )}
-                </button>
-              )
-            })}
-          </div>
-
-          <div className="flex items-center gap-1 rounded-full border border-ink-200 bg-white p-1 text-sm">
-            {SIZE_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => setSize(opt.value)}
-                className={`rounded-full px-3 py-1.5 transition ${
-                  size === opt.value
-                    ? 'bg-ink-800 text-white'
-                    : 'text-ink-600 hover:text-ink-800'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="hidden items-center gap-3 md:flex">
+            {stylePill}
+            {sizePill}
           </div>
 
           <button
@@ -188,7 +200,7 @@ export default function App() {
             className="flex items-center gap-2 rounded-full bg-ink-800 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-ink-900 disabled:opacity-50"
           >
             <Download className="h-4 w-4" />
-            {exporting ? '导出中…' : '导出 PNG'}
+            <span className="whitespace-nowrap">{exporting ? '导出中…' : '导出 PNG'}</span>
           </button>
 
           <a
@@ -196,17 +208,33 @@ export default function App() {
             target="_blank"
             rel="noreferrer"
             title="在 GitHub 上查看源码"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-200 text-ink-500 transition hover:border-ink-300 hover:text-ink-800"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-ink-200 text-ink-500 transition hover:border-ink-300 hover:text-ink-800"
           >
             <Github className="h-4 w-4" />
           </a>
         </div>
       </header>
 
+      {/* 移动端：风格 / 尺寸切换条（横向可滚动）；桌面端这些控件在 header 内，此条隐藏 */}
+      <div className="flex items-center gap-2 overflow-x-auto border-b border-ink-200/60 bg-white/50 px-4 py-2 md:hidden">
+        {stylePill}
+        {sizePill}
+      </div>
+
       <div className="flex flex-1 overflow-hidden">
-        <Editor value={text} onChange={setText} />
-        <Preview size={size}>{card}</Preview>
+        <Editor
+          value={text}
+          onChange={setText}
+          className={`${mobileTab === 'edit' ? 'flex' : 'hidden'} md:flex`}
+        />
+        <Preview
+          size={size}
+          className={`${mobileTab === 'preview' ? 'flex' : 'hidden'} md:flex`}
+        >
+          {card}
+        </Preview>
         <Controls
+          className={`${mobileTab === 'style' ? 'flex' : 'hidden'} md:flex`}
           style={effective}
           themeIndex={themeIndex}
           onThemeIndex={setThemeIndex}
@@ -220,6 +248,26 @@ export default function App() {
           onVertical={setVertical}
         />
       </div>
+
+      {/* 移动端底部 Tab：编辑 / 预览 / 调整 */}
+      <nav className="flex border-t border-ink-200/60 bg-white/80 backdrop-blur md:hidden">
+        {MOBILE_TABS.map((t) => {
+          const Icon = t.icon
+          const active = mobileTab === t.value
+          return (
+            <button
+              key={t.value}
+              onClick={() => setMobileTab(t.value)}
+              className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-xs transition ${
+                active ? 'text-ink-900' : 'text-ink-400'
+              }`}
+            >
+              <Icon className="h-5 w-5" />
+              {t.label}
+            </button>
+          )
+        })}
+      </nav>
     </div>
   )
 }

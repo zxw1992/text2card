@@ -5,6 +5,7 @@ import { proseThemes } from '../themes/proseThemes'
 import { poetryThemes } from '../themes/poetryThemes'
 
 interface Props {
+  className?: string
   style: Style
   themeIndex: number
   onThemeIndex: (n: number) => void
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export function Controls({
+  className = '',
   style,
   themeIndex,
   onThemeIndex,
@@ -34,7 +36,7 @@ export function Controls({
   const themes = pickThemes(style)
 
   return (
-    <aside className="flex h-full w-[320px] shrink-0 flex-col gap-6 border-l border-ink-200/60 bg-white/60 p-5 backdrop-blur">
+    <aside className={`h-full w-full shrink-0 flex-col gap-6 overflow-y-auto border-l border-ink-200/60 bg-white/60 p-5 backdrop-blur md:w-[320px] ${className}`}>
       <Section title="主题">
         <div className="grid grid-cols-2 gap-2">
           {themes.map((t, i) => (
