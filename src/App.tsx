@@ -139,7 +139,7 @@ export default function App() {
         <div className="flex items-center gap-3">
           <Sparkles className="h-5 w-5 text-ink-700" />
           <span className="font-serif text-xl font-semibold text-ink-800">text2card</span>
-          <span className="text-xs text-ink-400">文案卡片美化 · 本地运行</span>
+          <span className="text-xs text-ink-400">文案卡片美化</span>
         </div>
 
         <div className="flex items-center gap-3">
