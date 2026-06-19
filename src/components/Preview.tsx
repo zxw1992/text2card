@@ -6,6 +6,7 @@ interface Props {
   size: SizeMode
   children: ReactNode
   className?: string
+  onFitContent?: () => void
 }
 
 /** 卡片内是否有元素被 overflow:hidden 截断（固定尺寸下内容放不下） */
@@ -15,7 +16,7 @@ function hasClippedContent(root: HTMLElement | null): boolean {
   return nodes.some((el) => el.scrollHeight > el.clientHeight + 2)
 }
 
-export function Preview({ size, children, className = '' }: Props) {
+export function Preview({ size, children, className = '', onFitContent }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(0.5)
@@ -74,8 +75,16 @@ export function Preview({ size, children, className = '' }: Props) {
       style={{ background: 'var(--canvas-bg)' }}
     >
       {clipped && (
-        <div className="absolute left-1/2 top-4 z-10 -translate-x-1/2 rounded-full bg-amber-600/90 px-4 py-1.5 text-xs font-medium text-white shadow-sm">
-          内容超出卡片范围，导出将被截断——可换「自适应」尺寸或精简文本
+        <div className="absolute left-1/2 top-4 z-10 flex max-w-[calc(100%-2rem)] -translate-x-1/2 items-center gap-2 rounded-full bg-amber-600/95 py-1.5 pl-4 pr-1.5 text-xs font-medium text-white shadow-sm">
+          <span>内容超出卡片，导出将被截断</span>
+          {size !== 'auto' && onFitContent && (
+            <button
+              onClick={onFitContent}
+              className="shrink-0 rounded-full bg-white/25 px-2.5 py-1 font-medium transition hover:bg-white/35"
+            >
+              切到自适应
+            </button>
+          )}
         </div>
       )}
       <div

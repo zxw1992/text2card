@@ -267,6 +267,7 @@ export default function App() {
         />
         <Preview
           size={size}
+          onFitContent={() => setSize('auto')}
           className={`${mobileTab === 'preview' ? 'flex' : 'hidden'} md:flex`}
         >
           {card}
