@@ -58,7 +58,8 @@ export function Editor({ value, onChange, className = '' }: Props) {
     <aside className={`h-full w-full shrink-0 flex-col border-r border-ink-200/60 bg-white/60 backdrop-blur md:w-[360px] ${className}`}>
       <div className="flex items-center justify-between border-b border-ink-200/60 px-5 py-4">
         <h2 className="font-serif text-lg font-semibold text-ink-800">编辑</h2>
-        <div className="flex gap-1.5">
+        <div className="flex items-center gap-1.5">
+          <span className="mr-0.5 text-xs text-ink-400">示例</span>
           {SAMPLES.map((s) => (
             <button
               key={s.label}

@@ -11,6 +11,12 @@ export const SIZE_DIMENSIONS: Record<SizeMode, { width: number; height?: number;
 // 紧凑留白：auto 模式下让卡片基本贴合内容，仅保留下限避免极扁卡片
 export const COMPACT_MIN_HEIGHT = 480
 
+export const SIZE_OPTIONS: { value: SizeMode; label: string }[] = [
+  { value: 'auto', label: '自适应' },
+  { value: 'portrait', label: '3 : 4' },
+  { value: 'landscape', label: '16 : 9' },
+]
+
 interface Props {
   size: SizeMode
   background: string

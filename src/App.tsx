@@ -9,7 +9,7 @@ import { ProseCard } from './components/cards/ProseCard'
 import { PoetryCard } from './components/cards/PoetryCard'
 import { classify, type Style } from './lib/classifier'
 import { canCopyImage, copyPng, exportPng } from './lib/exporter'
-import type { SizeMode } from './components/CardFrame'
+import { SIZE_OPTIONS, type SizeMode } from './components/CardFrame'
 import { codeThemes } from './themes/codeThemes'
 import { quoteThemes } from './themes/quoteThemes'
 import { proseThemes } from './themes/proseThemes'
@@ -49,12 +49,6 @@ const STYLE_OPTIONS: { value: Style | 'auto'; label: string }[] = [
   { value: 'quote', label: '金句' },
   { value: 'prose', label: '长文' },
   { value: 'poetry', label: '诗词' },
-]
-
-const SIZE_OPTIONS: { value: SizeMode; label: string }[] = [
-  { value: 'auto', label: '自适应' },
-  { value: 'portrait', label: '3 : 4' },
-  { value: 'landscape', label: '16 : 9' },
 ]
 
 export default function App() {
@@ -199,22 +193,6 @@ export default function App() {
     </div>
   )
 
-  const sizePill = (
-    <div className="flex items-center gap-1 rounded-full border border-ink-200 bg-white p-1 text-sm">
-      {SIZE_OPTIONS.map((opt) => (
-        <button
-          key={opt.value}
-          onClick={() => setSize(opt.value)}
-          className={`whitespace-nowrap rounded-full px-3 py-1.5 transition ${
-            size === opt.value ? 'bg-ink-800 text-white' : 'text-ink-600 hover:text-ink-800'
-          }`}
-        >
-          {opt.label}
-        </button>
-      ))}
-    </div>
-  )
-
   const MOBILE_TABS = [
     { value: 'edit', label: '编辑', icon: Pencil },
     { value: 'preview', label: '预览', icon: Eye },
@@ -235,10 +213,7 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-2 md:gap-3">
-          <div className="hidden items-center gap-3 md:flex">
-            {stylePill}
-            {sizePill}
-          </div>
+          <div className="hidden items-center gap-3 md:flex">{stylePill}</div>
 
           {copySupported && (
             <button
@@ -274,10 +249,9 @@ export default function App() {
         </div>
       </header>
 
-      {/* 移动端：风格 / 尺寸切换条（横向可滚动）；桌面端这些控件在 header 内，此条隐藏 */}
+      {/* 移动端：风格切换条（横向可滚动）；桌面端风格在 header 内，此条隐藏 */}
       <div className="flex items-center gap-2 overflow-x-auto border-b border-ink-200/60 bg-white/50 px-4 py-2 md:hidden">
         {stylePill}
-        {sizePill}
       </div>
 
       <div className="flex flex-1 overflow-hidden">
@@ -297,6 +271,7 @@ export default function App() {
           className={`${mobileTab === 'style' ? 'flex' : 'hidden'} md:flex`}
           style={effective}
           size={size}
+          onSize={setSize}
           compact={compact}
           onCompact={setCompact}
           themeIndex={themeIndex}
