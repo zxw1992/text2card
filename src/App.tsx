@@ -146,6 +146,21 @@ export default function App() {
     }
   }
 
+  // ⌘/Ctrl+S 导出。用 ref 持有最新 handler，监听只绑一次。
+  // 不抢占 ⌘/Ctrl+C（会破坏正常的「复制选中文字」），故不设复制快捷键。
+  const exportRef = useRef(handleExport)
+  exportRef.current = handleExport
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && (e.key === 's' || e.key === 'S')) {
+        e.preventDefault()
+        exportRef.current()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
   const card = renderCard({
     style: effective,
     text,
@@ -204,6 +219,8 @@ export default function App() {
   ] as const
 
   const copySupported = canCopyImage()
+  const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform)
+  const exportHint = isMac ? '⌘S' : 'Ctrl+S'
 
   return (
     <div className="flex h-screen flex-col bg-[var(--canvas-bg)]">
@@ -235,6 +252,7 @@ export default function App() {
           <button
             onClick={handleExport}
             disabled={exporting}
+            title={`导出 PNG (${exportHint})`}
             className="flex items-center gap-2 rounded-full bg-ink-800 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-ink-900 disabled:opacity-50"
           >
             <Download className="h-4 w-4" />
