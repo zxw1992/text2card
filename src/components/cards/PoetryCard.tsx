@@ -9,10 +9,11 @@ interface Props {
   title?: string
   author?: string
   vertical?: boolean
+  compact?: boolean
 }
 
 export const PoetryCard = forwardRef<HTMLDivElement, Props>(function PoetryCard(
-  { text, theme, size, title, author, vertical = true },
+  { text, theme, size, title, author, vertical = true, compact },
   ref,
 ) {
   const padOuter = size === 'landscape' ? 100 : 120
@@ -43,7 +44,7 @@ export const PoetryCard = forwardRef<HTMLDivElement, Props>(function PoetryCard(
   const isLong = displayLines.join('').length > 60
 
   return (
-    <CardFrame ref={ref} size={size} background={theme.background}>
+    <CardFrame ref={ref} size={size} background={theme.background} compact={compact}>
       <InkWash color={theme.wash} />
       <div className="noise-overlay" style={{ opacity: 0.08 }} />
 

@@ -29,6 +29,7 @@ interface PersistedState {
   author: string
   eyebrow: string
   vertical: boolean
+  compact: boolean
 }
 
 function loadPersisted(): Partial<PersistedState> {
@@ -72,6 +73,7 @@ export default function App() {
   const [author, setAuthor] = useState(persisted.author ?? '')
   const [eyebrow, setEyebrow] = useState(persisted.eyebrow ?? '')
   const [vertical, setVertical] = useState(persisted.vertical ?? true)
+  const [compact, setCompact] = useState(persisted.compact ?? false)
   const [exporting, setExporting] = useState(false)
   const [copying, setCopying] = useState(false)
   const [mobileTab, setMobileTab] = useState<'edit' | 'preview' | 'style'>('edit')
@@ -104,14 +106,14 @@ export default function App() {
   useEffect(() => {
     const id = setTimeout(() => {
       try {
-        const state: PersistedState = { text, styleChoice, size, themeIndex, title, author, eyebrow, vertical }
+        const state: PersistedState = { text, styleChoice, size, themeIndex, title, author, eyebrow, vertical, compact }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
       } catch {
         // localStorage 不可用（隐私模式/配额满）时静默放弃自动保存
       }
     }, 300)
     return () => clearTimeout(id)
-  }, [text, styleChoice, size, themeIndex, title, author, eyebrow, vertical])
+  }, [text, styleChoice, size, themeIndex, title, author, eyebrow, vertical, compact])
 
   function handleStyleChange(next: Style | 'auto') {
     setStyleChoice(next)
@@ -170,6 +172,7 @@ export default function App() {
     author,
     eyebrow,
     vertical,
+    compact,
     cardRef,
   })
 
@@ -293,6 +296,9 @@ export default function App() {
         <Controls
           className={`${mobileTab === 'style' ? 'flex' : 'hidden'} md:flex`}
           style={effective}
+          size={size}
+          compact={compact}
+          onCompact={setCompact}
           themeIndex={themeIndex}
           onThemeIndex={setThemeIndex}
           title={title}
@@ -354,6 +360,7 @@ function renderCard({
   author,
   eyebrow,
   vertical,
+  compact,
   cardRef,
 }: {
   style: Style
@@ -364,6 +371,7 @@ function renderCard({
   author: string
   eyebrow: string
   vertical: boolean
+  compact: boolean
   cardRef: React.RefObject<HTMLDivElement>
 }) {
   const safeIdx = (arr: any[]) => arr[Math.min(themeIndex, arr.length - 1)]
@@ -375,6 +383,7 @@ function renderCard({
           text={text}
           theme={safeIdx(codeThemes)}
           size={size}
+          compact={compact}
           filename={title || undefined}
         />
       )
@@ -385,6 +394,7 @@ function renderCard({
           text={text}
           theme={safeIdx(quoteThemes)}
           size={size}
+          compact={compact}
           author={author || undefined}
         />
       )
@@ -395,6 +405,7 @@ function renderCard({
           text={text}
           theme={safeIdx(proseThemes)}
           size={size}
+          compact={compact}
           title={title || undefined}
           eyebrow={eyebrow || undefined}
           signature={author || undefined}
@@ -407,6 +418,7 @@ function renderCard({
           text={text}
           theme={safeIdx(poetryThemes)}
           size={size}
+          compact={compact}
           title={title || undefined}
           author={author || undefined}
           vertical={vertical}

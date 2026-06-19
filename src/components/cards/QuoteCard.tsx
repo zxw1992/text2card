@@ -7,6 +7,7 @@ interface Props {
   author?: string
   theme: QuoteTheme
   size: SizeMode
+  compact?: boolean
 }
 
 function pickFontSize(textLen: number, size: SizeMode): number {
@@ -22,12 +23,12 @@ function pickFontSize(textLen: number, size: SizeMode): number {
 }
 
 export const QuoteCard = forwardRef<HTMLDivElement, Props>(function QuoteCard(
-  { text, author, theme, size },
+  { text, author, theme, size, compact },
   ref,
 ) {
   const fontSize = pickFontSize(text.length, size)
   return (
-    <CardFrame ref={ref} size={size} background={theme.background}>
+    <CardFrame ref={ref} size={size} background={theme.background} compact={compact}>
       <div
         className="noise-overlay"
         style={{ opacity: theme.noise, mixBlendMode: 'overlay' }}

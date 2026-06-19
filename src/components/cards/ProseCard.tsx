@@ -12,17 +12,18 @@ interface Props {
   title?: string
   eyebrow?: string
   signature?: string
+  compact?: boolean
 }
 
 export const ProseCard = forwardRef<HTMLDivElement, Props>(function ProseCard(
-  { text, theme, size, title, eyebrow, signature },
+  { text, theme, size, title, eyebrow, signature, compact },
   ref,
 ) {
   const padX = size === 'landscape' ? 140 : 96
   const padY = size === 'landscape' ? 90 : 96
 
   return (
-    <CardFrame ref={ref} size={size} background={theme.background}>
+    <CardFrame ref={ref} size={size} background={theme.background} compact={compact}>
       <div className="noise-overlay" style={{ opacity: 0.05 }} />
       <div
         style={{

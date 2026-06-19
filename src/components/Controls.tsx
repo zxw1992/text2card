@@ -1,4 +1,5 @@
 import type { Style } from '../lib/classifier'
+import type { SizeMode } from './CardFrame'
 import { codeThemes } from '../themes/codeThemes'
 import { quoteThemes } from '../themes/quoteThemes'
 import { proseThemes } from '../themes/proseThemes'
@@ -7,6 +8,9 @@ import { poetryThemes } from '../themes/poetryThemes'
 interface Props {
   className?: string
   style: Style
+  size: SizeMode
+  compact: boolean
+  onCompact: (v: boolean) => void
   themeIndex: number
   onThemeIndex: (n: number) => void
   title: string
@@ -22,6 +26,9 @@ interface Props {
 export function Controls({
   className = '',
   style,
+  size,
+  compact,
+  onCompact,
   themeIndex,
   onThemeIndex,
   title,
@@ -64,6 +71,29 @@ export function Controls({
           ))}
         </div>
       </Section>
+
+      {size === 'auto' && (
+        <Section title="留白">
+          <div className="flex rounded-md border border-ink-200 p-0.5 text-sm">
+            <button
+              onClick={() => onCompact(false)}
+              className={`flex-1 rounded px-2 py-1.5 transition ${
+                !compact ? 'bg-ink-800 text-white' : 'text-ink-600'
+              }`}
+            >
+              标准
+            </button>
+            <button
+              onClick={() => onCompact(true)}
+              className={`flex-1 rounded px-2 py-1.5 transition ${
+                compact ? 'bg-ink-800 text-white' : 'text-ink-600'
+              }`}
+            >
+              紧凑
+            </button>
+          </div>
+        </Section>
+      )}
 
       {style === 'code' && (
         <Section title="文件名">

@@ -9,10 +9,11 @@ interface Props {
   theme: CodeTheme
   size: SizeMode
   filename?: string
+  compact?: boolean
 }
 
 export const CodeCard = forwardRef<HTMLDivElement, Props>(function CodeCard(
-  { text, theme, size, filename },
+  { text, theme, size, filename, compact },
   ref,
 ) {
   const { code, lang: fenceLang } = extractCodeFromFence(text)
@@ -45,7 +46,7 @@ export const CodeCard = forwardRef<HTMLDivElement, Props>(function CodeCard(
   const fileLabel = filename || guessFilename(lang)
 
   return (
-    <CardFrame ref={ref} size={size} background={theme.background}>
+    <CardFrame ref={ref} size={size} background={theme.background} compact={compact}>
       <div className="noise-overlay" style={{ opacity: 0.08 }} />
       <div
         style={{

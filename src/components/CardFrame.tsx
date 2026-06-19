@@ -8,25 +8,30 @@ export const SIZE_DIMENSIONS: Record<SizeMode, { width: number; height?: number;
   landscape: { width: 1920, height: 1080 },
 }
 
+// 紧凑留白：auto 模式下让卡片基本贴合内容，仅保留下限避免极扁卡片
+export const COMPACT_MIN_HEIGHT = 480
+
 interface Props {
   size: SizeMode
   background: string
   children: ReactNode
   radius?: number
+  compact?: boolean
 }
 
 export const CardFrame = forwardRef<HTMLDivElement, Props>(function CardFrame(
-  { size, background, children, radius = 0 },
+  { size, background, children, radius = 0, compact = false },
   ref,
 ) {
   const dim = SIZE_DIMENSIONS[size]
+  const minHeight = size === 'auto' && compact ? COMPACT_MIN_HEIGHT : dim.minHeight
   return (
     <div
       ref={ref}
       style={{
         width: dim.width,
         height: dim.height,
-        minHeight: dim.minHeight,
+        minHeight,
         background,
         borderRadius: radius,
         position: 'relative',
