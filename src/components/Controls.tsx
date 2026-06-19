@@ -49,10 +49,16 @@ export function Controls({
                   : 'border-ink-200 hover:border-ink-400'
               }`}
             >
-              <div
-                className="h-12 w-full"
-                style={{ background: t.preview }}
-              />
+              <div className="h-12 w-full" style={{ background: t.background }}>
+                {t.code && (
+                  // 代码主题：用主题自身颜色画迷你「代码行」，比纯底色更能预判配色
+                  <div className="flex h-full flex-col justify-center gap-[3px] px-2.5">
+                    <span className="h-[3px] rounded-full" style={{ width: '38%', background: t.code.accent }} />
+                    <span className="h-[3px] rounded-full" style={{ width: '72%', background: t.code.text, opacity: 0.85 }} />
+                    <span className="h-[3px] rounded-full" style={{ width: '54%', background: t.code.subtle }} />
+                  </div>
+                )}
+              </div>
               <div className="px-2 py-1.5 text-xs text-ink-700">{t.name}</div>
             </button>
           ))}
@@ -150,15 +156,25 @@ function Input({
   )
 }
 
-function pickThemes(style: Style): { name: string; preview: string }[] {
+interface ThemeSwatch {
+  name: string
+  background: string
+  code?: { text: string; subtle: string; accent: string }
+}
+
+function pickThemes(style: Style): ThemeSwatch[] {
   switch (style) {
     case 'code':
-      return codeThemes.map((t) => ({ name: t.name, preview: t.background }))
+      return codeThemes.map((t) => ({
+        name: t.name,
+        background: t.background,
+        code: { text: t.textColor, subtle: t.subtleColor, accent: t.accent },
+      }))
     case 'quote':
-      return quoteThemes.map((t) => ({ name: t.name, preview: t.background }))
+      return quoteThemes.map((t) => ({ name: t.name, background: t.background }))
     case 'prose':
-      return proseThemes.map((t) => ({ name: t.name, preview: t.background }))
+      return proseThemes.map((t) => ({ name: t.name, background: t.background }))
     case 'poetry':
-      return poetryThemes.map((t) => ({ name: t.name, preview: t.background }))
+      return poetryThemes.map((t) => ({ name: t.name, background: t.background }))
   }
 }
