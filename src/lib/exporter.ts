@@ -136,11 +136,30 @@ export async function renderPngCanvas(node: HTMLElement): Promise<HTMLCanvasElem
   return rasterize(svg, node.offsetWidth, node.offsetHeight)
 }
 
-export async function exportPng(node: HTMLElement, filename: string) {
+async function renderPngBlob(node: HTMLElement): Promise<Blob> {
   const canvas = await renderPngCanvas(node)
-  const blob = await new Promise<Blob>((resolve, reject) => {
+  return new Promise<Blob>((resolve, reject) => {
     canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('canvas.toBlob 返回空'))), 'image/png')
   })
+}
+
+/** 当前环境是否支持「复制图片到剪贴板」 */
+export function canCopyImage(): boolean {
+  return typeof ClipboardItem !== 'undefined' && !!navigator.clipboard?.write
+}
+
+/**
+ * 复制 PNG 到剪贴板。渲染耗时 1.5–2s，必须把 blob 的 Promise 交给
+ * ClipboardItem（而非 await 出 blob 再写）——否则 Safari 等会因用户手势
+ * 过期拒绝写入。
+ */
+export async function copyPng(node: HTMLElement) {
+  if (!canCopyImage()) throw new Error('当前浏览器不支持复制图片，请改用「导出 PNG」')
+  await navigator.clipboard.write([new ClipboardItem({ 'image/png': renderPngBlob(node) })])
+}
+
+export async function exportPng(node: HTMLElement, filename: string) {
+  const blob = await renderPngBlob(node)
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Download, Eye, Github, Pencil, SlidersHorizontal, Sparkles } from 'lucide-react'
+import { Check, Copy, Download, Eye, Github, Pencil, SlidersHorizontal, Sparkles } from 'lucide-react'
 import { Editor } from './components/Editor'
 import { Preview } from './components/Preview'
 import { Controls } from './components/Controls'
@@ -8,7 +8,7 @@ import { QuoteCard } from './components/cards/QuoteCard'
 import { ProseCard } from './components/cards/ProseCard'
 import { PoetryCard } from './components/cards/PoetryCard'
 import { classify, type Style } from './lib/classifier'
-import { exportPng } from './lib/exporter'
+import { canCopyImage, copyPng, exportPng } from './lib/exporter'
 import type { SizeMode } from './components/CardFrame'
 import { codeThemes } from './themes/codeThemes'
 import { quoteThemes } from './themes/quoteThemes'
@@ -73,7 +73,16 @@ export default function App() {
   const [eyebrow, setEyebrow] = useState(persisted.eyebrow ?? '')
   const [vertical, setVertical] = useState(persisted.vertical ?? true)
   const [exporting, setExporting] = useState(false)
+  const [copying, setCopying] = useState(false)
   const [mobileTab, setMobileTab] = useState<'edit' | 'preview' | 'style'>('edit')
+  const [toast, setToast] = useState<{ kind: 'ok' | 'err'; msg: string } | null>(null)
+  const toastTimer = useRef<ReturnType<typeof setTimeout>>()
+
+  function showToast(kind: 'ok' | 'err', msg: string) {
+    clearTimeout(toastTimer.current)
+    setToast({ kind, msg })
+    toastTimer.current = setTimeout(() => setToast(null), kind === 'err' ? 4000 : 2200)
+  }
 
   const detected = useMemo(() => classify(text), [text])
   const effective: Style = styleChoice === 'auto' ? detected : styleChoice
@@ -109,16 +118,31 @@ export default function App() {
   }
 
   async function handleExport() {
-    if (!cardRef.current) return
+    if (!cardRef.current || exporting) return
     try {
       setExporting(true)
       const name = `text2card-${effective}-${Date.now()}.png`
       await exportPng(cardRef.current, name)
+      showToast('ok', '已导出 PNG')
     } catch (err) {
       console.error('export failed:', err)
-      alert(`导出失败：${err instanceof Error ? err.message : String(err)}\n可尝试刷新页面后重试。`)
+      showToast('err', `导出失败：${err instanceof Error ? err.message : String(err)}`)
     } finally {
       setExporting(false)
+    }
+  }
+
+  async function handleCopy() {
+    if (!cardRef.current || copying) return
+    try {
+      setCopying(true)
+      await copyPng(cardRef.current)
+      showToast('ok', '已复制到剪贴板，可直接粘贴')
+    } catch (err) {
+      console.error('copy failed:', err)
+      showToast('err', `复制失败：${err instanceof Error ? err.message : String(err)}`)
+    } finally {
+      setCopying(false)
     }
   }
 
@@ -179,6 +203,8 @@ export default function App() {
     { value: 'style', label: '调整', icon: SlidersHorizontal },
   ] as const
 
+  const copySupported = canCopyImage()
+
   return (
     <div className="flex h-screen flex-col bg-[var(--canvas-bg)]">
       <header className="flex items-center justify-between gap-3 border-b border-ink-200/60 bg-white/70 px-4 py-3 backdrop-blur md:px-6">
@@ -193,6 +219,18 @@ export default function App() {
             {stylePill}
             {sizePill}
           </div>
+
+          {copySupported && (
+            <button
+              onClick={handleCopy}
+              disabled={copying}
+              title="复制图片到剪贴板"
+              className="flex items-center gap-2 rounded-full border border-ink-200 bg-white px-3 py-2 text-sm font-medium text-ink-700 transition hover:border-ink-300 hover:text-ink-900 disabled:opacity-50"
+            >
+              <Copy className="h-4 w-4" />
+              <span className="hidden whitespace-nowrap md:inline">{copying ? '复制中…' : '复制图片'}</span>
+            </button>
+          )}
 
           <button
             onClick={handleExport}
@@ -268,6 +306,18 @@ export default function App() {
           )
         })}
       </nav>
+
+      {toast && (
+        <div
+          className={`pointer-events-none fixed left-1/2 top-20 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-white shadow-lg ${
+            toast.kind === 'ok' ? 'bg-ink-800' : 'bg-red-600'
+          }`}
+          role="status"
+        >
+          {toast.kind === 'ok' ? <Check className="h-4 w-4" /> : null}
+          {toast.msg}
+        </div>
+      )}
     </div>
   )
 }
