@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Download, Sparkles } from 'lucide-react'
+import { Download, Github, Sparkles } from 'lucide-react'
 import { Editor } from './components/Editor'
 import { Preview } from './components/Preview'
 import { Controls } from './components/Controls'
@@ -190,6 +190,16 @@ export default function App() {
             <Download className="h-4 w-4" />
             {exporting ? '导出中…' : '导出 PNG'}
           </button>
+
+          <a
+            href="https://github.com/zxw1992/text2card"
+            target="_blank"
+            rel="noreferrer"
+            title="在 GitHub 上查看源码"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-200 text-ink-500 transition hover:border-ink-300 hover:text-ink-800"
+          >
+            <Github className="h-4 w-4" />
+          </a>
         </div>
       </header>
 
