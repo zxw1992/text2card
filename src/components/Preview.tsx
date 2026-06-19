@@ -71,8 +71,7 @@ export function Preview({ size, children, className = '', onFitContent }: Props)
   return (
     <div
       ref={wrapRef}
-      className={`preview-scroll relative h-full flex-1 items-center justify-center overflow-auto p-4 md:p-12 ${className}`}
-      style={{ background: 'var(--canvas-bg)' }}
+      className={`preview-scroll canvas-bg relative h-full flex-1 items-center justify-center overflow-auto p-4 md:p-12 ${className}`}
     >
       {clipped && (
         <div className="absolute left-1/2 top-4 z-10 flex max-w-[calc(100%-2rem)] -translate-x-1/2 items-center gap-2 rounded-full bg-amber-600/95 py-1.5 pl-4 pr-1.5 text-xs font-medium text-white shadow-sm">
