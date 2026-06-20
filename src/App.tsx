@@ -32,6 +32,13 @@ interface PersistedState {
   compact: boolean
 }
 
+// 首屏尺寸：已有持久化值则用它；否则手机默认 3:4 竖图（更适合竖屏分享），
+// 桌面默认自适应。卡片渲染与设备无关，仅是默认值差异，不影响导出一致性。
+function getInitialSize(persisted: Partial<PersistedState>): SizeMode {
+  if (SIZE_OPTIONS.some((o) => o.value === persisted.size)) return persisted.size!
+  return typeof window !== 'undefined' && window.innerWidth < 768 ? 'portrait' : 'auto'
+}
+
 function loadPersisted(): Partial<PersistedState> {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -57,9 +64,7 @@ export default function App() {
   const [styleChoice, setStyleChoice] = useState<Style | 'auto'>(
     STYLE_OPTIONS.some((o) => o.value === persisted.styleChoice) ? persisted.styleChoice! : 'auto',
   )
-  const [size, setSize] = useState<SizeMode>(
-    SIZE_OPTIONS.some((o) => o.value === persisted.size) ? persisted.size! : 'auto',
-  )
+  const [size, setSize] = useState<SizeMode>(() => getInitialSize(persisted))
   const [themeIndex, setThemeIndex] = useState(
     typeof persisted.themeIndex === 'number' && persisted.themeIndex >= 0 ? persisted.themeIndex : 0,
   )
