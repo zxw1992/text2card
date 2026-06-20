@@ -204,7 +204,7 @@ export default function App() {
   const exportHint = isMac ? '⌘S' : 'Ctrl+S'
 
   return (
-    <div className="flex h-screen flex-col bg-[var(--canvas-bg)]">
+    <div className="flex h-screen h-[100dvh] flex-col bg-[var(--canvas-bg)]">
       <header className="flex items-center justify-between gap-3 border-b border-ink-200/60 bg-white/70 px-4 py-3 backdrop-blur md:px-6">
         <div className="flex items-center gap-3">
           <Sparkles className="h-5 w-5 text-ink-700" />
@@ -288,7 +288,7 @@ export default function App() {
       </div>
 
       {/* 移动端底部 Tab：编辑 / 预览 / 调整 */}
-      <nav className="flex border-t border-ink-200/60 bg-white/80 backdrop-blur md:hidden">
+      <nav className="flex border-t border-ink-200/60 bg-white/80 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
         {MOBILE_TABS.map((t) => {
           const Icon = t.icon
           const active = mobileTab === t.value
