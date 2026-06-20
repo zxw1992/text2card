@@ -44,7 +44,7 @@ export const PoetryCard = forwardRef<HTMLDivElement, Props>(function PoetryCard(
   const isLong = displayLines.join('').length > 60
 
   return (
-    <CardFrame ref={ref} size={size} background={theme.background} compact={compact}>
+    <CardFrame ref={ref} size={size} background={theme.background} compact={compact && !vertical}>
       <InkWash color={theme.wash} />
       <div className="noise-overlay" style={{ opacity: 0.08 }} />
 

@@ -62,7 +62,7 @@ export function Controls({
         </div>
       </Section>
 
-      {size === 'auto' && (
+      {size === 'auto' && !(style === 'poetry' && vertical) && (
         <Section title="留白">
           <div className="flex rounded-md border border-ink-200 p-0.5 text-sm">
             <button

@@ -46,7 +46,7 @@ export const CodeCard = forwardRef<HTMLDivElement, Props>(function CodeCard(
   const fileLabel = filename || guessFilename(lang)
 
   return (
-    <CardFrame ref={ref} size={size} background={theme.background} compact={compact}>
+    <CardFrame ref={ref} size={size} background={theme.background} compact={compact} compactMinHeight={680}>
       <div className="noise-overlay" style={{ opacity: 0.08 }} />
       <div
         style={{
