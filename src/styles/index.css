@@ -22,6 +22,15 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* 应用外壳高度：同一规则内两条声明，顺序确定——dvh 支持时覆盖 vh，
+   不支持时回退 vh。不能用两个 Tailwind class（h-screen / h-[100dvh]）
+   叠加：生成 CSS 的先后不可控，h-screen 可能排在后面把 dvh 覆盖掉，
+   移动端地址栏显示时底部 Tab 栏就被挤出屏幕。 */
+.app-shell {
+  height: 100vh;
+  height: 100dvh;
+}
+
 /* Reusable noise overlay using inline SVG */
 .noise-overlay {
   position: absolute;

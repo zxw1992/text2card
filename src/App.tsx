@@ -204,7 +204,7 @@ export default function App() {
   const exportHint = isMac ? '⌘S' : 'Ctrl+S'
 
   return (
-    <div className="flex h-screen h-[100dvh] flex-col bg-[var(--canvas-bg)]">
+    <div className="app-shell flex flex-col bg-[var(--canvas-bg)]">
       <header className="flex items-center justify-between gap-3 border-b border-ink-200/60 bg-white/70 px-4 py-3 backdrop-blur md:px-6">
         <div className="flex items-center gap-3">
           <Sparkles className="h-5 w-5 text-ink-700" />
